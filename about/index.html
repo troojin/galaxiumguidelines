@@ -21,13 +21,70 @@
         place-items: center;
         background: #0b0b12;
         color: #f5f5f7;
+        padding: 1.5rem;
+      }
+      main {
+        max-width: 720px;
+      }
+      p,
+      li {
+        color: #d5d5dd;
+        line-height: 1.6;
+      }
+      .updated {
+        margin-top: 1.5rem;
+        font-size: 0.95rem;
+        color: #9ca3af;
+      }
+      .error {
+        color: #fda4af;
       }
     </style>
   </head>
   <body>
     <main>
-      <h1>About</h1>
-      <p>About Galaxium.</p>
+      <h1 id="title">Loading...</h1>
+      <p id="summary"></p>
+      <ul id="content"></ul>
+      <p class="updated" id="updated"></p>
+      <p class="error" id="error" hidden>Unable to load policy content.</p>
     </main>
+
+    <script>
+      const pageKey = 'about';
+
+      async function loadDocument() {
+        try {
+          const response = await fetch('/content/legal-pages.json');
+          const data = await response.json();
+          const docData = data.documents?.[pageKey];
+
+          if (!docData) {
+            throw new Error(`Missing document for key: ${pageKey}`);
+          }
+
+          document.getElementById('title').textContent = docData.title;
+          document.getElementById('summary').textContent = docData.summary;
+
+          const list = document.getElementById('content');
+          list.innerHTML = '';
+          docData.content.forEach((item) => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            list.appendChild(li);
+          });
+
+          document.getElementById('updated').textContent = `Last updated: ${docData.lastUpdated} (all docs: ${data.globalLastUpdated})`;
+        } catch (error) {
+          document.getElementById('error').hidden = false;
+          document.getElementById('summary').textContent = '';
+          document.getElementById('content').innerHTML = '';
+          document.getElementById('updated').textContent = '';
+          console.error(error);
+        }
+      }
+
+      loadDocument();
+    </script>
   </body>
 </html>
