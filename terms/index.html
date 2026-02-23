@@ -10,24 +10,76 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
-    <style>
-      :root {
-        font-family: 'Space Grotesk', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        background: #0b0b12;
-        color: #f5f5f7;
-      }
-    </style>
+    <link rel="stylesheet" href="/styles/legal-pages.css" />
   </head>
   <body>
     <main>
-      <h1>Terms</h1>
-      <p>Galaxium terms page.</p>
+      <h1 id="title">Loading...</h1>
+      <p id="summary"></p>
+      <ul id="content"></ul>
+
+      <section class="last-updated" id="updatedSection" hidden>
+        <p id="documentUpdated"></p>
+        <p id="globalUpdated"></p>
+      </section>
+
+      <p class="error" id="error" hidden>Unable to load policy content.</p>
     </main>
+
+    <script>
+      const pageKey = 'terms';
+
+      function formatDate(dateValue) {
+        const date = new Date(dateValue);
+        if (Number.isNaN(date.getTime())) {
+          return dateValue;
+        }
+        return date.toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+      }
+
+      async function loadDocument() {
+        try {
+          const response = await fetch('/content/legal-pages.json');
+
+          if (!response.ok) {
+            throw new Error(`Failed to load JSON: ${response.status}`);
+          }
+
+          const data = await response.json();
+          const docData = data.documents?.[pageKey];
+
+          if (!docData) {
+            throw new Error(`Missing document for key: ${pageKey}`);
+          }
+
+          document.getElementById('title').textContent = docData.title;
+          document.getElementById('summary').textContent = docData.summary;
+
+          const list = document.getElementById('content');
+          list.innerHTML = '';
+          docData.content.forEach((item) => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            list.appendChild(li);
+          });
+
+          document.getElementById('documentUpdated').textContent = `Last updated (Terms): ${formatDate(docData.lastUpdated)}`;
+          document.getElementById('globalUpdated').textContent = `Last updated (all policy pages): ${formatDate(data.globalLastUpdated)}`;
+          document.getElementById('updatedSection').hidden = false;
+        } catch (error) {
+          document.getElementById('error').hidden = false;
+          document.getElementById('summary').textContent = '';
+          document.getElementById('content').innerHTML = '';
+          document.getElementById('updatedSection').hidden = true;
+          console.error(error);
+        }
+      }
+
+      loadDocument();
+    </script>
   </body>
 </html>

@@ -1,0 +1,35 @@
+{
+  "globalLastUpdated": "2026-02-23",
+  "documents": {
+    "terms": {
+      "title": "Terms",
+      "summary": "Rules and guidelines for using Galaxium.",
+      "lastUpdated": "2026-02-23",
+      "content": [
+        "By using Galaxium, you agree to follow all applicable laws and platform rules.",
+        "Abuse, exploitation, or attempts to disrupt service availability are prohibited.",
+        "These terms may be updated as the service evolves."
+      ]
+    },
+    "privacy": {
+      "title": "Privacy",
+      "summary": "How Galaxium handles user data.",
+      "lastUpdated": "2026-02-23",
+      "content": [
+        "Galaxium only collects data needed to operate and secure the service.",
+        "Data is not sold to third parties.",
+        "Users can request clarification about stored account information."
+      ]
+    },
+    "about": {
+      "title": "About",
+      "summary": "Background information about Galaxium.",
+      "lastUpdated": "2026-02-23",
+      "content": [
+        "Galaxium is built to provide simple and clear platform experiences.",
+        "We focus on performance, clarity, and transparent communication.",
+        "Policy pages are driven from one shared JSON file for easy updates."
+      ]
+    }
+  }
+}
