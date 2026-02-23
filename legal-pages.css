@@ -7,18 +7,14 @@ body {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background: radial-gradient(circle at top, #17172a 0%, #0b0b12 55%);
+  background: radial-gradient(circle at top, #2a1b45 0%, #140b24 52%, #0a0614 100%);
   color: #f5f5f7;
   padding: 1.5rem;
 }
 
 main {
   width: min(720px, 100%);
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  padding: 0.25rem 0;
 }
 
 h1 {
