@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Credits | Galaxium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/legal-pages.css" />
+    
+  </head>
+  <body>
+    <main>
+      <h1 id="title">Loading...</h1>
+      <p id="summary"></p>
+      <ul id="content"></ul>
+      <p class="updated" id="updated"></p>
+      <p class="error" id="error" hidden>Unable to load policy content.</p>
+    </main>
+
+    <script>
+      const pageKey = 'Credits';
+
+      async function loadDocument() {
+        try {
+          const response = await fetch('/content/legal-pages.json');
+          const data = await response.json();
+          const docData = data.documents?.[pageKey];
+
+          if (!docData) {
+            throw new Error(`Missing document for key: ${pageKey}`);
+          }
+
+          document.getElementById('title').textContent = docData.title;
+          document.getElementById('summary').textContent = docData.summary;
+
+          const list = document.getElementById('content');
+          list.innerHTML = '';
+          docData.content.forEach((item) => {
+            const li = document.createElement('li');
+            li.innerHTML = item;;
+            list.appendChild(li);
+          });
+
+          const formatDate = (value) => {
+            const parsed = new Date(value);
+            return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString(undefined, {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            });
+          };
+
+          const docUpdated = docData.lastUpdated ? formatDate(docData.lastUpdated) : 'Unknown';
+          const globalUpdated = data.globalLastUpdated ? formatDate(data.globalLastUpdated) : 'Unknown';
+          document.getElementById('updated').textContent = `Last updated: ${docUpdated}. Site-wide policy update: ${globalUpdated}.`;
+        } catch (error) {
+          document.getElementById('error').hidden = false;
+          document.getElementById('summary').textContent = '';
+          document.getElementById('content').innerHTML = '';
+          document.getElementById('updated').textContent = '';
+          console.error(error);
+        }
+      }
+
+      loadDocument();
+    </script>
+  </body>
+</html>
